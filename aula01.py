@@ -1,0 +1,1 @@
+print(12, 34, sep='_') # o termo SEP é usado para separar, nesse caso vai ficar 12_34
