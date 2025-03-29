@@ -1,0 +1,3 @@
+Inicio do curso com a api flask
+# 1. Instalar o flask
+# 2. Criar um arquivo com o nome do projeto
