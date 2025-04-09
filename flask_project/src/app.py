@@ -1,40 +1,32 @@
-from flask import Flask, url_for
+import os
 
-app = Flask(__name__)
-
-@app.route("/olamundo")
-def hello_world():
-    return "<p>Hello, World!</p>"
-
-# definir outra rota
-@app.route("/bemvindo")
-def wellcome():
-    return "<p>bem vindo!</p>"
+from flask import Flask
 
 
-@app.route('/projects/')
-def projects():
-    return 'The project page'
+def create_app(test_config=None):
+    # create and configure the app
+    app = Flask(__name__, instance_relative_config=True)
+    app.config.from_mapping(
+        SECRET_KEY='dev',
+        DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
+    )
 
-@app.route('/about')
-def about():
-    return 'The about page'
+    if test_config is None:
+        # load the instance config, if it exists, when not testing
+        app.config.from_pyfile('config.py', silent=True)
+    else:
+        # load the test config if passed in
+        app.config.from_mapping(test_config)
 
+    # ensure the instance folder exists
+    try:
+        os.makedirs(app.instance_path)
+    except OSError:
+        pass
 
+    # a simple page that says hello
+    @app.route('/hello')
+    def hello():
+        return 'Hello, World!'
 
-@app.route('/')
-def index():
-    return 'index'
-
-@app.route('/login')
-def login():
-    return 'login'
-
-@app.route('/user/<username>')
-def profile(username):
-    return f'{username}\'s profile'
-
-with app.test_request_context():
-    print(url_for('bemvindo'))
-    print(url_for('projects'))
-    print(url_for('about', next='/'))
+    return app
